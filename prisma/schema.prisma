@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Doctors {
+  id          Int          @id @default(autoincrement())
+  name        String
+  nic         String
+  email       String?
+  specialist  String?
+  contact     String?
+  date_joined String?
+  status      String       @default("1")
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+  Patients    Patients[]
+  staff       staff[]
+  appoinment  appointment[]
+}
+
+model Patients {
+  id         Int          @id @default(autoincrement())
+  name       String
+  nic        String
+  email      String?
+  check_in   String?
+  check_out  String?
+  contact    String?
+  room_no    String?
+  status     String       @default("1")
+  doctor     Doctors      @relation(fields: [doctor_id], references: [id])
+  doctor_id  Int
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
+  appoinment appointment[]
+}
+
+model staff {
+  id         Int      @id @default(autoincrement())
+  name       String
+  nic        String
+  email      String?
+  contact    String?
+  status     String   @default("1")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  doctor     Doctors  @relation(fields: [doctor_id], references: [id])
+  doctor_id  Int
+}
+
+model appointment {
+  id         Int      @id @default(autoincrement())
+  date       String
+  type       String?
+  disease    String?
+  patient    Patients @relation(fields: [patient_id], references: [id])
+  patient_id Int
+  doctor     Doctors  @relation(fields: [doctor_id], references: [id])
+  doctor_id  Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
