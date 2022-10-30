@@ -1,4 +1,5 @@
-const { PrismaClient } = require("@prisma/client");const prisma = new PrismaClient();
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 module.exports = {
   patientsList: async function (req, res) {
@@ -82,7 +83,7 @@ module.exports = {
     try {
       const patient = await prisma.patients.delete({
         where: {
-          id: req.query.patient_id,
+          id: Number(req.query.patient_id),
         },
       });
       return res.status(200).json({ message: "data deleted successfuly" });
